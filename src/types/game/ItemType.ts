@@ -1,0 +1,1 @@
+export type ItemType = 'lure' | 'catch' | 'berry' | 'held' | 'consumable';

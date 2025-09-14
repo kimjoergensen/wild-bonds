@@ -1,0 +1,1 @@
+export type MoveVariant = 'physical' | 'special' | 'status';

@@ -1,0 +1,1 @@
+export type BattleState = 'selecting-action' | 'animating' | 'enemy-turn' | 'victory' | 'defeat' | 'catching';

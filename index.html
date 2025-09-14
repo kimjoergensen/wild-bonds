@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Wild Bonds - Creature Adventure Game</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+  <div id="app">
+    <div id="game-container">
+      <canvas id="game-canvas" width="800" height="600"></canvas>
+    </div>
+    <div id="ui-overlay">
+      <div id="debug-info" class="debug-panel">
+        <div>FPS: <span id="fps">0</span></div>
+        <div>Scene: <span id="current-scene">Loading...</span></div>
+      </div>
+    </div>
+  </div>
+  <script type="module" src="/src/main.ts"></script>
+</body>
+
+</html>

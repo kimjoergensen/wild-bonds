@@ -1,0 +1,22 @@
+# TypeScript
+*.tsbuildinfo
+
+# Vite
+dist/
+.vite/
+
+# Node modules
+node_modules/
+
+# Logs
+logs/
+*.log
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# IDEs
+.vscode/
+.idea/
