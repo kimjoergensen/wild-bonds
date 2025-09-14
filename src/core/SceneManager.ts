@@ -33,7 +33,8 @@ export class SceneManager {
     this.currentScene = newScene;
     this.currentSceneType = type;
 
-    const container = await this.currentScene.init();
+    const container = new Container();
+    await this.currentScene.init(container);
     this.currentScene.activate();
     this.stage.removeChildren();
     this.stage.addChild(container);

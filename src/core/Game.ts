@@ -20,6 +20,9 @@ export class Game {
     this.config = config;
     this.app = app;
     const stage = this.app.stage;
+    stage.width = screen.width;
+    stage.height = screen.height;
+    stage.scale.set(4);
     this.sceneManager = new SceneManager(stage);
     this.inputManager = new InputManager();
   }

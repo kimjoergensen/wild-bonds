@@ -3,7 +3,7 @@ import { Container } from 'pixi.js';
 export abstract class Scene {
   protected isActive: boolean = false;
 
-  abstract init(): Promise<Container>;
+  abstract init(container: Container): Promise<void>;
   abstract cleanup(): void;
 
   public activate(): void {

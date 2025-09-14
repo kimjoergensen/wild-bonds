@@ -4,9 +4,9 @@ import { Game } from './core/Game';
 
 // Game configuration
 const gameConfig: GameConfig = {
-  width: 800,
-  height: 600,
-  tileSize: 32,
+  width: 640,
+  height: 512,
+  tileSize: 16,
   debugMode: true
 };
 
@@ -14,7 +14,7 @@ async function initializeGame(): Promise<void> {
   try {
     // Initialize PixiJS Application (v8 pattern)
     const app = new Application();
-    await app.init({ width: gameConfig.width, height: gameConfig.height, });
+    await app.init({ width: gameConfig.width, height: gameConfig.height });
 
     const host = document.getElementById('app') || document.body;
     host.appendChild(app.canvas);
