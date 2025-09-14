@@ -22,23 +22,6 @@ body {
   position: relative;
 }
 
-/* Game Container */
-#game-container {
-  position: relative;
-  border: 2px solid #16213e;
-  border-radius: 8px;
-  overflow: hidden;
-  box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
-}
-
-#game-canvas {
-  display: block;
-  image-rendering: pixelated;
-  image-rendering: -moz-crisp-edges;
-  image-rendering: crisp-edges;
-  background: #0f3460;
-}
-
 /* UI Overlay */
 #ui-overlay {
   position: absolute;

@@ -1,12 +1,9 @@
-import { RenderContext } from '@wild-bonds/types/common/RenderContext';
-import { UpdateContext } from '@wild-bonds/types/common/UpdateContext';
+import { Container } from 'pixi.js';
 
 export abstract class Scene {
   protected isActive: boolean = false;
 
-  abstract init(): Promise<void>;
-  abstract update(context: UpdateContext): void;
-  abstract render(context: RenderContext): void;
+  abstract init(): Promise<Container>;
   abstract cleanup(): void;
 
   public activate(): void {

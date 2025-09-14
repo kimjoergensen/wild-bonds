@@ -1,12 +1,16 @@
 import { Scene } from '@wild-bonds/core/Scene';
-import { RenderContext } from '@wild-bonds/types/common/RenderContext';
 import { SceneType } from '@wild-bonds/types/common/SceneType';
-import { UpdateContext } from '@wild-bonds/types/common/UpdateContext';
+import { Container } from 'pixi.js';
 
 export class SceneManager {
+  private stage: Container;
   private scenes: Map<SceneType, Scene> = new Map();
   private currentScene: Scene | null = null;
   private currentSceneType: SceneType | null = null;
+
+  constructor(container: Container) {
+    this.stage = container;
+  }
 
   public registerScene(type: SceneType, scene: Scene): void {
     this.scenes.set(type, scene);
@@ -29,27 +33,17 @@ export class SceneManager {
     this.currentScene = newScene;
     this.currentSceneType = type;
 
-    await this.currentScene.init();
+    const container = await this.currentScene.init();
     this.currentScene.activate();
+    this.stage.removeChildren();
+    this.stage.addChild(container);
 
-    // Update debug info
+    // // Update debug info
     this.updateDebugInfo(type);
   }
 
   public getCurrentSceneType(): SceneType | null {
     return this.currentSceneType;
-  }
-
-  public update(context: UpdateContext): void {
-    if (this.currentScene && this.currentScene.getIsActive()) {
-      this.currentScene.update(context);
-    }
-  }
-
-  public render(context: RenderContext): void {
-    if (this.currentScene && this.currentScene.getIsActive()) {
-      this.currentScene.render(context);
-    }
   }
 
   private updateDebugInfo(sceneType: SceneType): void {

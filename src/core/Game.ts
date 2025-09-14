@@ -1,80 +1,50 @@
 import { SceneManager } from '@wild-bonds/core/SceneManager';
+import { ExplorationScene } from '@wild-bonds/scenes/ExplorationScene';
 import { InputManager } from '@wild-bonds/systems/InputManager';
 import { GameConfig } from '@wild-bonds/types/common/GameConfig';
-import { RenderContext } from '@wild-bonds/types/common/RenderContext';
-import { UpdateContext } from '@wild-bonds/types/common/UpdateContext';
+import { Application } from 'pixi.js';
+
 
 export class Game {
-  private canvas: HTMLCanvasElement;
-  private ctx: CanvasRenderingContext2D;
-  private config: GameConfig;
-  private sceneManager: SceneManager;
-  private inputManager: InputManager;
+  public readonly config: GameConfig;
+  public readonly sceneManager: SceneManager;
+  public readonly inputManager: InputManager;
+  public readonly app: Application;
 
   private lastTime: number = 0;
   private isRunning: boolean = false;
   private frameCount: number = 0;
   private fpsUpdateTime: number = 0;
 
-  constructor(config: GameConfig) {
+  constructor(config: GameConfig, app: Application) {
     this.config = config;
-
-    // Get canvas element
-    const canvas = document.getElementById(config.canvasId) as HTMLCanvasElement;
-    if (!canvas) {
-      throw new Error(`Canvas element with id "${config.canvasId}" not found`);
-    }
-
-    this.canvas = canvas;
-    this.canvas.width = config.width;
-    this.canvas.height = config.height;
-
-    // Get rendering context
-    const ctx = this.canvas.getContext('2d');
-    if (!ctx) {
-      throw new Error('Failed to get 2D rendering context');
-    }
-
-    this.ctx = ctx;
-
-    // Initialize systems
-    this.sceneManager = new SceneManager();
+    this.app = app;
+    const stage = this.app.stage;
+    this.sceneManager = new SceneManager(stage);
     this.inputManager = new InputManager();
-
-    // Configure rendering context for pixel art
-    this.ctx.imageSmoothingEnabled = false;
   }
 
-  public getSceneManager(): SceneManager {
-    return this.sceneManager;
-  }
-
-  public getInputManager(): InputManager {
-    return this.inputManager;
-  }
-
-  public getCanvas(): HTMLCanvasElement {
-    return this.canvas;
-  }
-
-  public getContext(): CanvasRenderingContext2D {
-    return this.ctx;
-  }
-
-  public getConfig(): GameConfig {
-    return this.config;
-  }
-
-  public start(): void {
+  /**
+   * Starts the game loop if not already running.
+   */
+  public async start(): Promise<void> {
     if (this.isRunning) {
+      console.warn('Game is already running.');
       return;
     }
+
+    const explorationScene = new ExplorationScene();
+    this.sceneManager.registerScene('exploration', explorationScene);
+    await this.sceneManager.switchToScene('exploration');
 
     this.isRunning = true;
     this.lastTime = performance.now();
     this.gameLoop(this.lastTime);
   }
 
+  /**
+   * Stops the game loop.
+   */
   public stop(): void {
     this.isRunning = false;
   }
@@ -84,28 +54,17 @@ export class Game {
       return;
     }
 
-    const deltaTime = Math.min((currentTime - this.lastTime) / 1000, 1 / 30); // Cap at 30fps minimum
+    const deltaTime = Math.min((currentTime - this.lastTime) / 1000, 1 / 24); // Cap at 24fps minimum
     this.lastTime = currentTime;
 
     // Update
-    const updateContext: UpdateContext = {
-      deltaTime,
-      currentTime
-    };
+    // const updateContext: UpdateContext = {
+    //   deltaTime,
+    //   currentTime
+    // };
 
     this.inputManager.update();
-    this.sceneManager.update(updateContext);
-
-    // Render
-    this.clearCanvas();
-
-    const renderContext: RenderContext = {
-      ctx: this.ctx,
-      deltaTime,
-      currentTime
-    };
-
-    this.sceneManager.render(renderContext);
+    // this.sceneManager.update(updateContext);
 
     // Update FPS counter
     this.updateFPS(deltaTime);
@@ -113,11 +72,6 @@ export class Game {
     // Continue loop
     requestAnimationFrame(this.gameLoop);
   };
-
-  private clearCanvas(): void {
-    this.ctx.fillStyle = '#0f3460';
-    this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
-  }
 
   private updateFPS(deltaTime: number): void {
     if (!this.config.debugMode) return;
