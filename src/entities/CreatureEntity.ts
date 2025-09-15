@@ -4,75 +4,33 @@ import { Move } from '@wild-bonds/types/game/Move';
 import { MOVES } from '@wild-bonds/utils/CreatureData';
 
 export class CreatureEntity {
-
-  /**
-   * A unique identifier for this creature entity.
-   */
   public readonly id: string;
-
-  /**
-   * Indicates whether this creature is wild or owned by a player.
-   */
   public readonly isWild: boolean;
-
-  /**
-   * The base creature data defining this entity's species and attributes.
-   */
-  public readonly creature: Creature;
-
-  /**
-   * The current health of the creature. This value is reactive and can be observed for changes.
-   */
-  public health: number;
-
-  /**
-   * An optional nickname given to the creature by its owner.
-   */
+  public readonly moves: Move[];
   public nickname?: string;
+  private creature: Creature;
+  private health: number;
+  private experience: number;
 
-  /**
-   * Indicates whether the creature is currently engaged in battle.
-   */
-  public inBattle: boolean = false;
-
-  /**
-   * The set of moves that this creature can use in battle.
-   * Only indices 0, 1, 2, and 3 are allowed.
-   */
-  public moves: Move[];
-
-  /**
-   * The total experience points the creature has accumulated.
-   */
-  public experience: number;
-
-  /**
-   * The current level of the creature, derived from its experience points.
-   */
-  public get level(): number {
+  /** The current level of the creature, derived from its experience points. */
+  get level(): number {
     const level = Math.cbrt((4 * this.experience) / 5);
     return Math.floor(level);
   }
 
-  /**
-   * The experience points required to reach the next level.
-   */
-  public get experienceToNextLevel(): number {
+  /** The experience points required to reach the next level. */
+  get experienceToNextLevel(): number {
     const nextLevel = this.level + 1;
     return Math.floor((5 * Math.pow(nextLevel, 3)) / 4) - this.experience;
   }
 
-  /**
-   * The current stats of the creature, which may change over time.
-   */
-  public get stats(): CreatureStats {
+  /** The current stats of the creature, which may change over time. */
+  get stats(): CreatureStats {
     return this.calculateStats();
   }
 
-  /**
-   * The display name of the creature, using its nickname if available.
-   */
-  public get name(): string {
+  /** The display name of the creature, using its nickname if available. */
+  get name(): string {
     return this.nickname ?? this.creature.name;
   }
 
@@ -80,7 +38,7 @@ export class CreatureEntity {
    * Checks if the creature is dead (health <= 0).
    * @returns True if the creature's health is zero or below, indicating it has fainted.
    */
-  public get isDead(): boolean {
+  get isDead(): boolean {
     return this.health <= 0;
   }
 
@@ -107,7 +65,7 @@ export class CreatureEntity {
    * @param damage The amount of damage to inflict on the creature.
    * @returns The actual damage dealt to the creature.
    */
-  public takeDamage(damage: number): number {
+  public damage(damage: number): number {
     const actualDamage = Math.min(damage, this.health);
     this.health -= actualDamage;
     return actualDamage;

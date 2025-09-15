@@ -26,8 +26,17 @@
       "@wild-bonds/*": [
         "src/*"
       ],
+      "@wild-bonds/configs/*": [
+        "src/configs/*"
+      ],
       "@wild-bonds/core/*": [
         "src/core/*"
+      ],
+      "@wild-bonds/entities/*": [
+        "src/entities/*"
+      ],
+      "@wild-bonds/graphics/*": [
+        "src/graphics/*"
       ],
       "@wild-bonds/scenes/*": [
         "src/scenes/*"
@@ -35,11 +44,8 @@
       "@wild-bonds/systems/*": [
         "src/systems/*"
       ],
-      "@wild-bonds/entities/*": [
-        "src/entities/*"
-      ],
-      "@wild-bonds/models/*": [
-        "src/models/*"
+      "@wild-bonds/types/*": [
+        "src/types/*"
       ],
       "@wild-bonds/utils/*": [
         "src/utils/*"

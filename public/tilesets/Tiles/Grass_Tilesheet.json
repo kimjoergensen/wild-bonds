@@ -1,6 +1,6 @@
 {
   "meta": {
-    "image": "Grass_Tilesheet.png",
+    "image": "Grass_Tileset.png",
     "scale": "1",
     "size": {
       "w": 48,
@@ -67,7 +67,7 @@
     "grass_s": {
       "frame": {
         "x": 16,
-        "y": 31,
+        "y": 32,
         "w": 16,
         "h": 16
       }
@@ -83,7 +83,7 @@
     "grass_corner_nw": {
       "frame": {
         "x": 0,
-        "y": 49,
+        "y": 48,
         "w": 16,
         "h": 16
       }
@@ -93,7 +93,7 @@
         "x": 16,
         "y": 48,
         "w": 16,
-        "h": 15
+        "h": 16
       }
     },
     "grass_corner_sw": {

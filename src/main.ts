@@ -1,26 +1,23 @@
-import { GameConfig } from '@wild-bonds/types/common/GameConfig';
+import { Game } from '@wild-bonds/core/Game';
+import { AssetsLoader } from '@wild-bonds/graphics/AssetsLoader';
 import { Application } from 'pixi.js';
-import { Game } from './core/Game';
-
-// Game configuration
-const gameConfig: GameConfig = {
-  width: 576,
-  height: 432,
-  tileSize: 16,
-  debugMode: true
-};
+import { GAME_CONFIG } from './configs/Constants';
 
 async function initializeGame(): Promise<void> {
   try {
     // Initialize PixiJS Application (v8 pattern)
     const app = new Application();
-    await app.init({ width: gameConfig.width, height: gameConfig.height });
+    await app.init({ width: GAME_CONFIG.width, height: GAME_CONFIG.height });
 
     const host = document.getElementById('app') || document.body;
     host.appendChild(app.canvas);
 
+    // Load assets
+    const assetsLoader = new AssetsLoader();
+    await assetsLoader.loadAssets();
+
     // Start the game
-    const game = new Game(gameConfig, app);
+    const game = new Game(app, assetsLoader);
     await game.start();
 
     console.log('Wild Bonds game started successfully!');
@@ -37,7 +34,7 @@ async function initializeGame(): Promise<void> {
       appElement.innerHTML = `
         <div style="color: red; text-align: center; padding: 50px;">
           <h2>Failed to load game</h2>
-          ${gameConfig.debugMode
+          ${GAME_CONFIG.debugMode
           ? `<p>${error instanceof Error
             ? error.message
             : 'Unknown error'}

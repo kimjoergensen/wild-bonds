@@ -3,13 +3,13 @@ import { SceneType } from '@wild-bonds/types/common/SceneType';
 import { Container } from 'pixi.js';
 
 export class SceneManager {
-  private stage: Container;
-  private scenes: Map<SceneType, Scene> = new Map();
+  private readonly stage: Container;
+  private readonly scenes: Map<SceneType, Scene> = new Map();
   private currentScene: Scene | null = null;
   private currentSceneType: SceneType | null = null;
 
-  constructor(container: Container) {
-    this.stage = container;
+  constructor(stage: Container) {
+    this.stage = stage;
   }
 
   public registerScene(type: SceneType, scene: Scene): void {

@@ -1,38 +1,39 @@
+import { GAME_CONFIG } from '@wild-bonds/configs/Constants';
 import { SceneManager } from '@wild-bonds/core/SceneManager';
 import { PlayerEntity } from '@wild-bonds/entities/PlayerEntity';
+import { AssetsLoader } from '@wild-bonds/graphics/AssetsLoader';
 import { ExplorationScene } from '@wild-bonds/scenes/ExplorationScene';
 import { InputManager } from '@wild-bonds/systems/InputManager';
-import { GameConfig } from '@wild-bonds/types/common/GameConfig';
 import { Vector2 } from '@wild-bonds/types/common/Vector2';
 import { Application, Assets, Sprite } from 'pixi.js';
 
 
 export class Game {
-  public readonly app: Application;
-  public readonly config: GameConfig;
-  public readonly player: PlayerEntity;
-  public readonly sceneManager: SceneManager;
-  public readonly inputManager: InputManager;
+  private readonly app: Application;
+  private readonly assetsLoader: AssetsLoader = new AssetsLoader();
+  private readonly player: PlayerEntity;
+  private readonly sceneManager: SceneManager;
+  private readonly inputManager: InputManager;
 
   private lastTime: number = 0;
   private isRunning: boolean = false;
   private frameCount: number = 0;
   private fpsUpdateTime: number = 0;
 
-  constructor(config: GameConfig, app: Application) {
+  constructor(app: Application, assetsLoader: AssetsLoader) {
     this.app = app;
-    this.config = config;
+    this.assetsLoader = assetsLoader;
 
     const stage = this.app.stage;
     stage.width = screen.width;
     stage.height = screen.height;
-    stage.scale.set(3);
+    stage.scale.set(GAME_CONFIG.scale);
 
     this.sceneManager = new SceneManager(stage);
     this.inputManager = new InputManager();
 
     const playerStart: Vector2 = { x: 5, y: 4 };
-    this.player = new PlayerEntity(playerStart, this.config.tileSize);
+    this.player = new PlayerEntity(playerStart, GAME_CONFIG.tileSize);
   }
 
   /**
@@ -45,14 +46,14 @@ export class Game {
     }
 
     // Pass only tileSize to ExplorationScene
-    const explorationScene = new ExplorationScene(this.config.tileSize);
+    const explorationScene = new ExplorationScene(this.assetsLoader);
     this.sceneManager.registerScene('exploration', explorationScene);
     const sceneContainer = await this.sceneManager.switchToScene('exploration');
 
     // Load player sprite
     const playerTexture = await Assets.load('/tilesets/Player/Player.png');
     const sprite = new Sprite(playerTexture);
-    this.player.sprite = sprite;
+    this.player.setSprite(sprite);
     sceneContainer.addChild(sprite);
 
     this.isRunning = true;
@@ -95,7 +96,7 @@ export class Game {
   };
 
   private updateFPS(deltaTime: number): void {
-    if (!this.config.debugMode) return;
+    if (!GAME_CONFIG.debugMode) return;
 
     this.frameCount++;
     this.fpsUpdateTime += deltaTime;
