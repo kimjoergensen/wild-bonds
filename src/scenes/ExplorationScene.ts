@@ -1,19 +1,20 @@
 import { Scene } from '@wild-bonds/core/Scene';
 import { Assets, Container, Sprite } from 'pixi.js';
 
-type PathTile = 'grass_nw' | 'grass_n' | 'grass_ne' | 'grass_w' | 'grass_e' | 'grass_sw' | 'grass_s' | 'grass_se' | 'dirt_nw' | 'dirt_ne' | 'dirt_sw' | 'dirt_se' | 'dirt' | 'dirt_1' | 'dirt_2' | 'dirt_3';
+type PathTile = 'grass_nw' | 'grass_n' | 'grass_ne' | 'grass_w' | 'grass_e' | 'grass_sw' | 'grass_s' | 'grass_se' | 'grass_corner_nw' | 'grass_corner_ne' | 'grass_corner_sw' | 'grass_corner_se' | 'dirt' | 'dirt_1' | 'dirt_2' | 'dirt_3';
 type GrassMiddle = 'grass';
 
 export class ExplorationScene extends Scene {
   private tile_map: (PathTile | GrassMiddle)[][] = [
-    ['grass_nw', 'grass_n', 'grass_n', 'grass_n', 'grass_n', 'grass_n', 'grass_n', 'grass_n', 'grass_n', 'grass_ne'],
-    ['grass_w', 'dirt', 'dirt_1', 'dirt', 'dirt', 'dirt', 'dirt', 'dirt', 'dirt', 'grass_e'],
-    ['grass_w', 'dirt', 'dirt', 'dirt', 'dirt', 'dirt_2', 'dirt', 'dirt', 'dirt', 'grass_e'],
-    ['grass_w', 'dirt', 'dirt', 'dirt', 'dirt', 'dirt', 'dirt', 'dirt', 'dirt', 'grass_e'],
-    ['grass_w', 'dirt', 'dirt', 'dirt_1', 'dirt', 'dirt', 'dirt', 'dirt', 'dirt', 'grass_e'],
-    ['grass_w', 'dirt', 'dirt', 'dirt', 'dirt', 'dirt', 'dirt', 'dirt', 'dirt_1', 'grass_e'],
-    ['grass_w', 'dirt', 'dirt', 'dirt', 'dirt', 'dirt', 'dirt_2', 'dirt', 'dirt', 'grass_e'],
-    ['grass_sw', 'grass_s', 'grass_s', 'grass_s', 'grass_s', 'grass_s', 'grass_s', 'grass_s', 'grass_s', 'grass_se'],
+    ['grass_nw', 'grass_n', 'grass_n', 'grass_n', 'grass_n', 'grass_n', 'grass_n', 'grass_n', 'grass_n', 'grass_n', 'grass_n', 'grass_ne'],
+    ['grass_w', 'dirt', 'dirt_1', 'dirt', 'dirt', 'dirt', 'dirt', 'dirt', 'dirt_2', 'dirt', 'dirt', 'grass_e'],
+    ['grass_w', 'dirt', 'grass_corner_nw', 'grass_s', 'grass_s', 'grass_s', 'grass_s', 'grass_s', 'grass_s', 'grass_corner_ne', 'dirt', 'grass_e'],
+    ['grass_w', 'dirt', 'grass_e', 'grass', 'grass', 'grass', 'grass', 'grass', 'grass', 'grass_w', 'dirt', 'grass_e'],
+    ['grass_w', 'dirt', 'grass_e', 'grass', 'grass', 'grass', 'grass', 'grass', 'grass', 'grass_w', 'dirt', 'grass_e'],
+    ['grass_w', 'dirt', 'grass_e', 'grass', 'grass', 'grass', 'grass', 'grass', 'grass', 'grass_w', 'dirt', 'grass_e'],
+    ['grass_w', 'dirt', 'grass_corner_sw', 'grass_n', 'grass_n', 'grass_n', 'grass_n', 'grass_n', 'grass_n', 'grass_corner_se', 'dirt', 'grass_e'],
+    ['grass_w', 'dirt', 'dirt', 'dirt', 'dirt_2', 'dirt', 'dirt', 'dirt', 'dirt', 'dirt_1', 'dirt', 'grass_e'],
+    ['grass_sw', 'grass_s', 'grass_s', 'grass_s', 'grass_s', 'grass_s', 'grass_s', 'grass_s', 'grass_s', 'grass_s', 'grass_s', 'grass_se'],
   ];
 
   private tileSize: number = 16;

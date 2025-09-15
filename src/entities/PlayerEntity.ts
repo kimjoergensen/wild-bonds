@@ -1,4 +1,3 @@
-import { InputManager } from '@wild-bonds/systems/InputManager';
 import { Direction } from '@wild-bonds/types/common/Direction';
 import { Vector2 } from '@wild-bonds/types/common/Vector2';
 import { Sprite } from 'pixi.js';
@@ -41,23 +40,31 @@ export class PlayerEntity {
     this.#tileSize = tileSize;
   }
 
-  update(deltaTime: number, inputManager: InputManager): void {
+  /**
+   * Updates the player's position and state.
+   * @param deltaTime Time elapsed since the last update.
+   * @param direction Direction the player is moving in.
+   */
+  update(deltaTime: number, direction: Direction | null): void {
     this.#moveTimer += deltaTime;
 
     // Only allow movement if enough time has passed
     if (this.#moveTimer >= this.#moveDelay) {
-      const movement = inputManager.isMovementPressed();
 
-      if (movement.x !== 0 || movement.y !== 0) {
+      if (direction != null) {
         // Update direction based on input
-        if (movement.x > 0) this.#direction = 'right';
-        else if (movement.x < 0) this.#direction = 'left';
-        else if (movement.y > 0) this.#direction = 'down';
-        else if (movement.y < 0) this.#direction = 'up';
+        this.#direction = direction;
+
+        // Calculate movement vector
+        const movement = this.#calculateMovementVector(direction);
 
         // Move player
         this.#position.x += movement.x;
         this.#position.y += movement.y;
+
+        // Boundary checking (simple for now)
+        this.#position.x = Math.max(0, Math.min(11, this.#position.x)); // 12x9 grid
+        this.#position.y = Math.max(0, Math.min(8, this.#position.y));
 
         // Update sprite position
         if (this.#sprite) {
@@ -66,12 +73,28 @@ export class PlayerEntity {
           this.#sprite.y = pos.y * this.#tileSize;
         }
 
-        // Boundary checking (simple for now)
-        this.#position.x = Math.max(0, Math.min(9, this.#position.x)); // 10x8 grid
-        this.#position.y = Math.max(0, Math.min(7, this.#position.y));
-
         this.#moveTimer = 0;
       }
     }
+  }
+
+  #calculateMovementVector(direction: Direction): Vector2 {
+    const movement: Vector2 = { x: 0, y: 0 };
+
+    switch (direction) {
+      case 'up':
+        movement.y = -1;
+        break;
+      case 'down':
+        movement.y = 1;
+        break;
+      case 'left':
+        movement.x = -1;
+        break;
+      case 'right':
+        movement.x = 1;
+    }
+
+    return movement;
   }
 }

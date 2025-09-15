@@ -4,8 +4,8 @@ import { Game } from './core/Game';
 
 // Game configuration
 const gameConfig: GameConfig = {
-  width: 640,
-  height: 512,
+  width: 576,
+  height: 432,
   tileSize: 16,
   debugMode: true
 };

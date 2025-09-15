@@ -26,12 +26,12 @@ export class Game {
     const stage = this.app.stage;
     stage.width = screen.width;
     stage.height = screen.height;
-    stage.scale.set(4);
+    stage.scale.set(3);
 
     this.sceneManager = new SceneManager(stage);
     this.inputManager = new InputManager();
 
-    const playerStart: Vector2 = { x: 4, y: 4 };
+    const playerStart: Vector2 = { x: 5, y: 4 };
     this.player = new PlayerEntity(playerStart, this.config.tileSize);
   }
 
@@ -84,7 +84,7 @@ export class Game {
     this.inputManager.update();
 
     // Player movement and update
-    this.player.update(deltaTime, this.inputManager);
+    this.player.update(deltaTime, this.inputManager.isMovementPressed());
     // this.sceneManager.update(updateContext);
 
     // Update FPS counter
