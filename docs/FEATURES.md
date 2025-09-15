@@ -2,6 +2,39 @@
 
 This document outlines planned features and enhancements for Wild Bonds.
 
+## Phase 1: Core Gameplay
+
+### Exploration & World
+- [ ] **Tile-based Movement**: Move player on a grid-based map
+- [x] **Basic Overworld Map**: Simple explorable area
+- [ ] **Collision Detection**: Prevent walking through obstacles
+- [ ] **Interactable Objects**: Chests, signs, and doors
+- [ ] **NPC Encounters**: Basic non-player characters
+
+### Creature System
+- [ ] **Creature Capture**: Catch wild creatures
+- [ ] **Creature Party**: Manage a team of creatures
+- [x] **Basic Creature Stats**: HP, attack, defense, speed
+- [x] **Leveling Up**: Gain experience and levels
+- [x] **Moves**: Each creature can use basic moves
+
+### Battle System
+- [ ] **Turn-based Battles**: Simple 1v1 combat
+- [ ] **Health & Damage**: HP tracking and move effects
+- [ ] **Victory/Defeat**: Win/lose conditions
+- [ ] **Wild Encounters**: Random battles in grass
+
+### UI & Controls
+- [ ] **Basic HUD**: Show HP, party, and battle info
+- [ ] **Menu System**: Simple inventory and party menu
+- [ ] **Keyboard Controls**: Move, select, interact
+
+### Technical Foundation
+- [x] **Asset Loading**: Load sprites and data
+- [ ] **Scene Management**: Switch between overworld and battle
+- [ ] **Save/Load**: Basic save and load system
+- [x] **Error Logging**: Console error output
+
 ## Phase 2: Enhanced Gameplay
 
 ### Creature Collection

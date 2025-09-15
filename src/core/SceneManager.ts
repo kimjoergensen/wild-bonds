@@ -16,7 +16,7 @@ export class SceneManager {
     this.scenes.set(type, scene);
   }
 
-  public async switchToScene(type: SceneType): Promise<void> {
+  public async switchToScene(type: SceneType): Promise<Container> {
     const newScene = this.scenes.get(type);
 
     if (!newScene) {
@@ -41,6 +41,8 @@ export class SceneManager {
 
     // // Update debug info
     this.updateDebugInfo(type);
+
+    return container;
   }
 
   public getCurrentSceneType(): SceneType | null {

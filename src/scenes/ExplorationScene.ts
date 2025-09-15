@@ -16,6 +16,14 @@ export class ExplorationScene extends Scene {
     ['grass_sw', 'grass_s', 'grass_s', 'grass_s', 'grass_s', 'grass_s', 'grass_s', 'grass_s', 'grass_s', 'grass_se'],
   ];
 
+  private tileSize: number = 16;
+
+  constructor(tileSize: number = 16) {
+    super();
+    this.tileSize = tileSize;
+  }
+
+
   public async init(container: Container): Promise<void> {
     try {
       const pathTileset = await Assets.load('/tilesets/Tiles/Path_Tileset.png');
@@ -29,20 +37,15 @@ export class ExplorationScene extends Scene {
 
       const sheet = await Assets.load('path_tilesheet');
 
-
-      const grass_nw = new Sprite(sheet.textures['grass_nw']);
-      grass_nw.x = 0; grass_nw.y = 0;
-
-      const grass_n = new Sprite(sheet.textures['grass_n']);
-      grass_n.x = 16; grass_n.y = 0;
-
-      console.log(this.tile_map.length);
+      // Draw tile map
       for (let row = 0; row < this.tile_map.length; row++) {
         for (let col = 0; col < this.tile_map[row].length; col++) {
           const tile = this.tile_map[row][col];
           const sprite = tile === 'grass' ? new Sprite(grassMiddle) : new Sprite(sheet.textures[tile]);
-          sprite.x = col * 16;
-          sprite.y = row * 16;
+          sprite.width = this.tileSize;
+          sprite.height = this.tileSize;
+          sprite.x = col * this.tileSize;
+          sprite.y = row * this.tileSize;
           container.addChild(sprite);
         }
       }
