@@ -16,7 +16,7 @@ This document outlines planned features and enhancements for Wild Bonds.
 - [ ] **Creature Party**: Manage a team of creatures
 - [x] **Basic Creature Stats**: HP, attack, defense, speed
 - [x] **Leveling Up**: Gain experience and levels
-- [x] **Moves**: Each creature can use basic moves
+- [ ] **Moves**: Each creature can use basic moves
 
 ### Battle System
 - [ ] **Turn-based Battles**: Simple 1v1 combat
@@ -31,7 +31,7 @@ This document outlines planned features and enhancements for Wild Bonds.
 
 ### Technical Foundation
 - [x] **Asset Loading**: Load sprites and data
-- [ ] **Scene Management**: Switch between overworld and battle
+- [x] **Scene Management**: Switch between overworld and battle
 - [ ] **Save/Load**: Basic save and load system
 - [x] **Error Logging**: Console error output
 

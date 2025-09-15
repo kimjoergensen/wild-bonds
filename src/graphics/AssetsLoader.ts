@@ -8,16 +8,16 @@ export class AssetsLoader {
 
   async loadAssets(): Promise<void> {
     // Load the tilesets and tilesheets here
-    this.spritesheets['grass'] = await this.#loadTilesheet('grass',
-      '/tilesets/Tiles/Grass_Tileset.png', '/tilesets/Tiles/Grass_Tilesheet.json');
+    this.spritesheets['grass'] = await this.loadSpritesheet('grass',
+      '/tilesets/tiles/Grass.png', '/tilesets/tiles/Grass_Spritesheet.json');
 
-    this.spritesheets['path'] = await this.#loadTilesheet('path',
-      '/tilesets/Tiles/Path_Tileset.png', '/tilesets/Tiles/Path_Tilesheet.json');
+    this.spritesheets['path'] = await this.loadSpritesheet('path',
+      '/tilesets/tiles/Path.png', '/tilesets/tiles/Path_Spritesheet.json');
 
     this.isLoaded = true;
   }
 
-  getSprite<T extends Tileset>(type: T, tile: Tile): Sprite {
+  public getSprite<T extends Tileset>(type: T, tile: Tile): Sprite {
     if (!this.isLoaded) {
       throw new Error('Assets not loaded yet. Call loadAssets() first.');
     }
@@ -30,7 +30,7 @@ export class AssetsLoader {
     return new Sprite(texture);
   }
 
-  async #loadTilesheet(tileset: Tileset, tilesetPath: string, spritesheetPath: string): Promise<Spritesheet> {
+  private async loadSpritesheet(tileset: Tileset, tilesetPath: string, spritesheetPath: string): Promise<Spritesheet> {
     const texture = await Assets.load(tilesetPath);
     const spritesheet = await Assets.load(spritesheetPath);
 

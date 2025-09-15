@@ -1,6 +1,6 @@
 {
   "meta": {
-    "image": "Path_Tileset.png",
+    "image": "Grass.png",
     "scale": "1",
     "size": {
       "w": 48,
@@ -8,7 +8,7 @@
     }
   },
   "frames": {
-    "path_nw": {
+    "grass_nw": {
       "frame": {
         "x": 0,
         "y": 0,
@@ -16,7 +16,7 @@
         "h": 16
       }
     },
-    "path_n": {
+    "grass_n": {
       "frame": {
         "x": 16,
         "y": 0,
@@ -24,7 +24,7 @@
         "h": 16
       }
     },
-    "path_ne": {
+    "grass_ne": {
       "frame": {
         "x": 32,
         "y": 0,
@@ -32,7 +32,7 @@
         "h": 16
       }
     },
-    "path_w": {
+    "grass_w": {
       "frame": {
         "x": 0,
         "y": 16,
@@ -40,7 +40,7 @@
         "h": 16
       }
     },
-    "path": {
+    "grass": {
       "frame": {
         "x": 16,
         "y": 16,
@@ -48,7 +48,7 @@
         "h": 16
       }
     },
-    "path_e": {
+    "grass_e": {
       "frame": {
         "x": 32,
         "y": 16,
@@ -56,7 +56,7 @@
         "h": 16
       }
     },
-    "path_sw": {
+    "grass_sw": {
       "frame": {
         "x": 0,
         "y": 32,
@@ -64,7 +64,7 @@
         "h": 16
       }
     },
-    "path_s": {
+    "grass_s": {
       "frame": {
         "x": 16,
         "y": 32,
@@ -72,7 +72,7 @@
         "h": 16
       }
     },
-    "path_se": {
+    "grass_se": {
       "frame": {
         "x": 32,
         "y": 32,
@@ -80,7 +80,7 @@
         "h": 16
       }
     },
-    "path_corner_nw": {
+    "grass_corner_nw": {
       "frame": {
         "x": 0,
         "y": 48,
@@ -88,7 +88,7 @@
         "h": 16
       }
     },
-    "path_corner_ne": {
+    "grass_corner_ne": {
       "frame": {
         "x": 16,
         "y": 48,
@@ -96,7 +96,7 @@
         "h": 16
       }
     },
-    "path_corner_sw": {
+    "grass_corner_sw": {
       "frame": {
         "x": 0,
         "y": 64,
@@ -104,7 +104,7 @@
         "h": 16
       }
     },
-    "path_corner_se": {
+    "grass_corner_se": {
       "frame": {
         "x": 16,
         "y": 64,
@@ -112,7 +112,7 @@
         "h": 16
       }
     },
-    "path_1": {
+    "grass_1": {
       "frame": {
         "x": 0,
         "y": 80,
@@ -120,7 +120,7 @@
         "h": 16
       }
     },
-    "path_2": {
+    "grass_2": {
       "frame": {
         "x": 16,
         "y": 80,
@@ -128,7 +128,7 @@
         "h": 16
       }
     },
-    "path_3": {
+    "grass_3": {
       "frame": {
         "x": 32,
         "y": 80,
