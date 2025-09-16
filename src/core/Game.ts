@@ -5,7 +5,7 @@ import { AssetsLoader } from '@wild-bonds/graphics/AssetsLoader';
 import { ExplorationScene } from '@wild-bonds/scenes/ExplorationScene';
 import { InputManager } from '@wild-bonds/systems/InputManager';
 import { Vector2 } from '@wild-bonds/types/common/Vector2';
-import { AnimatedSprite, Application, Assets, Spritesheet } from 'pixi.js';
+import { Application } from 'pixi.js';
 
 
 export class Game {
@@ -45,51 +45,19 @@ export class Game {
       return;
     }
 
-    // Pass only tileSize to ExplorationScene
+    // Load world
     const explorationScene = new ExplorationScene(this.assetsLoader);
     this.sceneManager.registerScene('exploration', explorationScene);
     const sceneContainer = await this.sceneManager.switchToScene('exploration');
 
-    // Load player sprite
-    const playerTexture = await Assets.load('sprites/player/Player.png');
-    const playerSpritesheet: Spritesheet = await Assets.load('sprites/player/Player.json');
+    // Load player sprite and initialize graphics
+    const playerSpritesheet = this.assetsLoader.getAnimationSpritesheet('player');
+    this.player.initializeGraphics(playerSpritesheet);
 
-    Assets.add({
-      alias: 'player',
-      src: 'sprites/player/Player.json',
-      data: { texture: playerTexture }
-    });
-
-    const frames = playerSpritesheet.data.animations?.['run_side'];
-    const textureArray = [];
-    for (const frame of frames || []) {
-      const texture = playerSpritesheet.textures[frame];
-      if (texture) {
-        textureArray.push(texture);
-      } else {
-        throw new Error(`Texture not found for frame: ${frame}`);
-      }
+    const playerSprite = this.player.getSprite();
+    if (playerSprite) {
+      sceneContainer.addChild(playerSprite);
     }
-
-    const anim = new AnimatedSprite(textureArray);
-    anim.width = GAME_CONFIG.tileSize * 2;
-    anim.height = GAME_CONFIG.tileSize * 2;
-    // anim.x = (1 * GAME_CONFIG.tileSize) / 2;
-    anim.x = 48 - 8;
-    anim.y = 16 - 12;
-    // anim.y = (6 * GAME_CONFIG.tileSize) + (GAME_CONFIG.tileSize / 2);
-    anim.animationSpeed = 0.12;
-    anim.play();
-    // this.player.setAnimation(anim);
-    sceneContainer.addChild(anim);
-    // const player = AnimatedSprite.fromFrames();
-    // console.log('anim', anim);
-    // anim.animationSpeed = 0.15;
-    // anim.play();
-    // this.player.setAnimation(anim);
-    // const sprite = new Sprite(playerTexture);
-    // this.player.setSprite(sprite);
-    // sceneContainer.addChild(anim);
 
     this.isRunning = true;
     this.lastTime = performance.now();

@@ -1,9 +1,10 @@
+import { PlayerGraphicsController } from '@wild-bonds/graphics/PlayerGraphicsController';
 import { Direction } from '@wild-bonds/types/common/Direction';
 import { Vector2 } from '@wild-bonds/types/common/Vector2';
-import { Sprite } from 'pixi.js';
+import { AnimatedSprite, Spritesheet } from 'pixi.js';
 
 export class PlayerEntity {
-  private sprite: Sprite | null = null;
+  private graphicsController: PlayerGraphicsController;
   private position: Vector2;
   private direction: Direction;
   private speed: number;
@@ -11,8 +12,10 @@ export class PlayerEntity {
 
   private moveTimer: number;
   private moveDelay: number;
+  private isMoving: boolean = false;
 
   constructor(startPosition: Vector2, tileSize: number) {
+    this.graphicsController = new PlayerGraphicsController(tileSize);
     this.position = startPosition;
     this.direction = 'down';
     this.speed = 4; // tiles per second
@@ -28,6 +31,9 @@ export class PlayerEntity {
    */
   public update(deltaTime: number, direction: Direction | null): void {
     this.moveTimer += deltaTime;
+
+    // Determine if player is moving
+    this.isMoving = direction !== null;
 
     // Only allow movement if enough time has passed
     if (this.moveTimer >= this.moveDelay) {
@@ -48,23 +54,29 @@ export class PlayerEntity {
         this.position.y = Math.max(0, Math.min(8, this.position.y));
 
         // Update sprite position
-        if (this.sprite) {
-          const pos: Vector2 = this.position;
-          this.sprite.x = pos.x * this.tileSize;
-          this.sprite.y = pos.y * this.tileSize;
-        }
+        this.graphicsController.setPosition(
+          this.position.x * this.tileSize,
+          this.position.y * this.tileSize
+        );
 
         this.moveTimer = 0;
       }
     }
+
+    // Update animation regardless of movement timer
+    this.graphicsController.updateAnimation(this.isMoving, this.direction);
   }
 
-  public setSprite(sprite: Sprite): void {
-    this.sprite = sprite;
-    this.sprite.width = this.tileSize;
-    this.sprite.height = this.tileSize;
-    this.sprite.x = this.position.x * this.tileSize;
-    this.sprite.y = this.position.y * this.tileSize;
+  public initializeGraphics(spritesheet: Spritesheet): void {
+    this.graphicsController.initialize(spritesheet);
+    this.graphicsController.setPosition(
+      this.position.x * this.tileSize,
+      this.position.y * this.tileSize
+    );
+  }
+
+  public getSprite(): AnimatedSprite | null {
+    return this.graphicsController.getSprite();
   }
 
   private calculateMovementVector(direction: Direction): Vector2 {

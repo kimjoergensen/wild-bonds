@@ -22,6 +22,7 @@
     "noFallthroughCasesInSwitch": true,
     /* Path mapping */
     "baseUrl": ".",
+    "sourceMap": true,
     "paths": {
       "@wild-bonds/*": [
         "src/*"

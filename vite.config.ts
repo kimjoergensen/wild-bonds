@@ -1,5 +1,6 @@
 import { resolve } from 'path';
 import { defineConfig } from 'vite';
+import Terminal from 'vite-plugin-terminal';
 
 export default defineConfig({
   base: './',
@@ -7,6 +8,10 @@ export default defineConfig({
     port: 3000,
     open: true
   },
+  plugins: [Terminal({
+    console: 'terminal',
+    output: ['terminal', 'console']
+  })],
   resolve: {
     alias: {
       '@wild-bonds': resolve(__dirname, 'src'),
