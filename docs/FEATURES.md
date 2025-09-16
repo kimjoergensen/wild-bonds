@@ -5,7 +5,7 @@ This document outlines planned features and enhancements for Wild Bonds.
 ## Phase 1: Core Gameplay
 
 ### Exploration & World
-- [ ] **Tile-based Movement**: Move player on a grid-based map
+- [x] **Tile-based Movement**: Move player on a grid-based map
 - [x] **Basic Overworld Map**: Simple explorable area
 - [ ] **Collision Detection**: Prevent walking through obstacles
 - [ ] **Interactable Objects**: Chests, signs, and doors

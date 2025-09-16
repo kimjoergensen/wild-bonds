@@ -2,6 +2,7 @@ import { GAME_CONFIG } from '@wild-bonds/configs/Constants';
 import { SceneManager } from '@wild-bonds/core/SceneManager';
 import { PlayerEntity } from '@wild-bonds/entities/PlayerEntity';
 import { AssetsLoader } from '@wild-bonds/graphics/AssetsLoader';
+import { BattleScene } from '@wild-bonds/scenes/BattleScene';
 import { ExplorationScene } from '@wild-bonds/scenes/ExplorationScene';
 import { InputManager } from '@wild-bonds/systems/InputManager';
 import { Vector2 } from '@wild-bonds/types/common/Vector2';
@@ -12,6 +13,8 @@ export class Game {
   private readonly app: Application;
   private readonly assetsLoader: AssetsLoader;
   private readonly player: PlayerEntity;
+  private explorationScene: ExplorationScene | null = null;
+  private prevPlayerTile: { x: number; y: number; } | null = null;
   private readonly sceneManager: SceneManager;
   private readonly inputManager: InputManager;
 
@@ -47,7 +50,15 @@ export class Game {
 
     // Load world
     const explorationScene = new ExplorationScene(this.assetsLoader);
+    this.explorationScene = explorationScene;
+    // Register both scenes
     this.sceneManager.registerScene('exploration', explorationScene);
+    const battleScene = new BattleScene(this.assetsLoader);
+    this.sceneManager.registerScene('battle', battleScene);
+    // Set up callback to switch to battle scene
+    explorationScene.setEncounterCallback(() => {
+      this.sceneManager.switchToScene('battle');
+    });
     const sceneContainer = await this.sceneManager.switchToScene('exploration');
 
     // Load player sprite and initialize graphics
@@ -89,6 +100,14 @@ export class Game {
 
     // Player movement and update
     this.player.update(deltaTime, this.inputManager.isMovementPressed());
+    // After player movement, check for random encounter only if player moved to a new tile
+    if (this.explorationScene) {
+      const pos = this.player.getPosition();
+      if (!this.prevPlayerTile || this.prevPlayerTile.x !== pos.x || this.prevPlayerTile.y !== pos.y) {
+        this.explorationScene.checkForRandomEncounter(pos.x, pos.y);
+      }
+      this.prevPlayerTile = { x: pos.x, y: pos.y };
+    }
     // this.sceneManager.update(updateContext);
 
     // Update FPS counter

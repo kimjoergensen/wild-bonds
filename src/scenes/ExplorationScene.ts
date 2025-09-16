@@ -3,6 +3,8 @@ import { Scene } from '@wild-bonds/core/Scene';
 import { Tile } from '@wild-bonds/types/graphics/Tile';
 import { Container } from 'pixi.js';
 
+type EncounterCallback = () => void;
+
 export class ExplorationScene extends Scene {
   // TODO: Figure out a better way to manage tile maps
   private tile_map: Tile[][] = [
@@ -16,6 +18,30 @@ export class ExplorationScene extends Scene {
     ['path_w', 'path', 'path', 'path', 'path_2', 'path', 'path', 'path', 'path', 'path_1', 'path', 'path_e'],
     ['path_sw', 'path_s', 'path_s', 'path_s', 'path_s', 'path_s', 'path_s', 'path_s', 'path_s', 'path_s', 'path_s', 'path_se'],
   ];
+
+  private onEncounter: EncounterCallback | null = null;
+
+  /**
+   * Set a callback to be called when a random encounter is triggered.
+   */
+  public setEncounterCallback(cb: EncounterCallback) {
+    this.onEncounter = cb;
+  }
+
+  /**
+   * Checks if the given position is an encounter tile (grass) and rolls for a random encounter.
+   * If an encounter occurs, triggers the encounter callback.
+   */
+  public checkForRandomEncounter(x: number, y: number): void {
+    const tile = this.tile_map[y]?.[x];
+    if (tile && tile.startsWith('grass')) {
+      // 10% chance for encounter (adjust as needed)
+      if (Math.random() < 0.1) {
+        console.log('A wild creature appeared! (random encounter triggered)');
+        if (this.onEncounter) this.onEncounter();
+      }
+    }
+  }
 
   public async init(container: Container): Promise<void> {
     try {

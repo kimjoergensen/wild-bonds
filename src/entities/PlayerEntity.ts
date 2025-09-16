@@ -15,6 +15,13 @@ export class PlayerEntity {
   private isMoving: boolean = false;
   private stepCooldown: number = 0; // seconds
 
+  /**
+   * Returns the player's current logical grid position.
+   */
+  public getPosition(): Vector2 {
+    return { ...this.position };
+  }
+
   constructor(startPosition: Vector2, tileSize: number) {
     this.graphicsController = new PlayerGraphicsController(tileSize);
     this.position = { ...startPosition };
