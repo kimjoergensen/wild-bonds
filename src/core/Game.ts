@@ -6,7 +6,7 @@ import { ExplorationScene } from '@wild-bonds/scenes/ExplorationScene';
 import { InputManager } from '@wild-bonds/systems/InputManager';
 import { SceneManager } from '@wild-bonds/systems/SceneManager';
 import { Vector2 } from '@wild-bonds/types/common/Vector2';
-import { Application, Container } from 'pixi.js';
+import { Application } from 'pixi.js';
 
 
 export class Game {
@@ -14,7 +14,6 @@ export class Game {
   private readonly assetsLoader: AssetsLoader;
   private readonly player: PlayerEntity;
   private explorationScene: ExplorationScene | null = null;
-  private explorationContainer: Container | null = null;
   private prevPlayerTile: { x: number; y: number; } | null = null;
   private readonly sceneManager: SceneManager;
   private readonly inputManager: InputManager;
@@ -49,12 +48,33 @@ export class Game {
       return;
     }
 
+
     // Load world
     const explorationScene = new ExplorationScene(this.assetsLoader);
     this.explorationScene = explorationScene;
-    // Register both scenes
     this.sceneManager.registerScene('exploration', explorationScene);
-    const battleScene = new BattleScene(this.assetsLoader);
+
+    // Dummy creatures for demonstration (replace with real encounter logic)
+    const playerCreature = {
+      id: 'pig',
+      name: 'Pig',
+      baseStats: {},
+      statMultipliers: {},
+      spriteSheet: 'Pig',
+      description: 'A brave pig.',
+      type: 'animal',
+    } as any;
+    const enemyCreature = {
+      id: 'sheep',
+      name: 'Sheep',
+      baseStats: {},
+      statMultipliers: {},
+      spriteSheet: 'Sheep',
+      description: 'A wild sheep.',
+      type: 'animal',
+    } as any;
+
+    const battleScene = new BattleScene(this.assetsLoader, playerCreature, enemyCreature);
     this.sceneManager.registerScene('battle', battleScene);
 
     // Set up callbacks for scene transitions
@@ -66,10 +86,9 @@ export class Game {
     });
 
     const sceneContainer = await this.sceneManager.switchToScene('exploration');
-    this.explorationContainer = sceneContainer;
 
     // Load player sprite and initialize graphics
-    const playerSpritesheet = this.assetsLoader.getAnimationSpritesheet('player');
+    const playerSpritesheet = this.assetsLoader.getSpritesheet('player');
     this.player.initializeGraphics(playerSpritesheet);
 
     const playerSprite = this.player.getSprite();
@@ -95,7 +114,6 @@ export class Game {
 
   private async switchToExplorationScene(): Promise<void> {
     const sceneContainer = await this.sceneManager.switchToScene('exploration');
-    this.explorationContainer = sceneContainer;
 
     // Re-add player sprite to exploration scene
     const playerSprite = this.player.getSprite();

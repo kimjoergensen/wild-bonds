@@ -1,0 +1,52 @@
+{
+  "frames": {
+    "chicken_0": {
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "w": 32,
+        "h": 32
+      }
+    },
+    "chicken_1": {
+      "frame": {
+        "x": 32,
+        "y": 0,
+        "w": 32,
+        "h": 32
+      }
+    },
+    "chicken_2": {
+      "frame": {
+        "x": 0,
+        "y": 32,
+        "w": 32,
+        "h": 32
+      }
+    },
+    "chicken_3": {
+      "frame": {
+        "x": 32,
+        "y": 32,
+        "w": 32,
+        "h": 32
+      }
+    }
+  },
+  "meta": {
+    "image": "Chicken.png",
+    "size": {
+      "w": 64,
+      "h": 64
+    },
+    "scale": "1"
+  },
+  "animations": {
+    "chicken_walk": [
+      "chicken_0",
+      "chicken_1",
+      "chicken_2",
+      "chicken_3"
+    ]
+  }
+}

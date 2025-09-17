@@ -1,11 +1,24 @@
 import { GAME_CONFIG } from '@wild-bonds/configs/Constants';
 import { Scene } from '@wild-bonds/core/Scene';
+import { CreatureSprite } from '@wild-bonds/graphics/CreatureSprite';
+import { Creature } from '@wild-bonds/types/game/Creature';
 import { Container, Graphics } from 'pixi.js';
+
 
 type ExitCallback = () => void;
 
 export class BattleScene extends Scene {
   private onExit: ExitCallback | null = null;
+  private playerCreature: Creature;
+  private enemyCreature: Creature;
+  private playerSprite: CreatureSprite | null = null;
+  private enemySprite: CreatureSprite | null = null;
+
+  constructor(assetsLoader: any, playerCreature: Creature, enemyCreature: Creature) {
+    super(assetsLoader);
+    this.playerCreature = playerCreature;
+    this.enemyCreature = enemyCreature;
+  }
 
   /**
    * Set a callback to be called when the player wants to exit the battle.
@@ -42,19 +55,27 @@ export class BattleScene extends Scene {
     // playerPlatform.endFill();
     container.addChild(playerPlatform);
 
-    // Enemy placeholder (simple rectangle)
-    const enemyPlaceholder = new Graphics();
-    // enemyPlaceholder.beginFill(0xFF6B35); // Orange
-    enemyPlaceholder.rect(width * 0.7, height * 0.45, width * 0.1, height * 0.15).fill(0xFF6B35);
-    // enemyPlaceholder.endFill();
-    container.addChild(enemyPlaceholder);
+    // --- Creature Sprites ---
+    // Import AssetsLoader dynamically to avoid circular deps if needed
+    // Use the '_0' frame from the spritesheet for both creatures
+    const enemySheet = this.assetsLoader.getSpritesheet(this.enemyCreature.name.toLowerCase() as any);
+    const enemyFrame = enemySheet.textures[`${this.enemyCreature.name.toLowerCase()}_0`];
+    const { Sprite } = await import('pixi.js');
+    const enemySprite = new Sprite(enemyFrame);
+    enemySprite.x = width * 0.75;
+    enemySprite.y = height * 0.56;
+    enemySprite.anchor.set(0.5, 0.8);
+    enemySprite.scale.set(2);
+    container.addChild(enemySprite);
 
-    // Player placeholder (simple rectangle)
-    const playerPlaceholder = new Graphics();
-    // playerPlaceholder.beginFill(0x87CEEB); // Light blue
-    playerPlaceholder.rect(width * 0.2, height * 0.7, width * 0.1, height * 0.15).fill(0x87CEEB);
-    // playerPlaceholder.endFill();
-    container.addChild(playerPlaceholder);
+    const playerSheet = this.assetsLoader.getSpritesheet(this.playerCreature.name.toLowerCase() as any);
+    const playerFrame = playerSheet.textures[`${this.playerCreature.name.toLowerCase()}_0`];
+    const playerSprite = new Sprite(playerFrame);
+    playerSprite.x = width * 0.25;
+    playerSprite.y = height * 0.81;
+    playerSprite.anchor.set(0.5, 0.8);
+    playerSprite.scale.set(2);
+    container.addChild(playerSprite);
 
     // Command interface box
     const commandBox = new Graphics();

@@ -5,26 +5,14 @@ import { Assets, Sprite, Spritesheet } from 'pixi.js';
 
 export class AssetsLoader {
   private readonly spritesheets = {} as Record<Tileset, Spritesheet>;
-  private readonly animationSpritesheets = {} as Record<Spriteset, Spritesheet>;
+  private readonly animationSpritesheets = {} as Record<string, Spritesheet>;
   private readonly creatureTextures = {} as Record<string, any>;
   private isLoaded = false;
 
   async loadAssets(): Promise<void> {
     try {
-      // Load the tilesets and tilesheets here
-      this.spritesheets['grass'] = await this.loadSpritesheet('grass',
-        '/tilesets/tiles/Grass.png', '/tilesets/tiles/Grass_Spritesheet.json');
-
-      this.spritesheets['path'] = await this.loadSpritesheet('path',
-        '/tilesets/tiles/Path.png', '/tilesets/tiles/Path_Spritesheet.json');
-
-      // Load player animations
-      this.animationSpritesheets['player'] = await this.loadAnimationSpritesheet('player',
-        '/sprites/player/Player.png', '/sprites/player/Player.json');
-
-      // Load creature sprites
-      await this.loadCreatureSprites();
-
+      await this.loadBackgroundTiles();
+      await this.loadSpritesAndAnimations();
       this.isLoaded = true;
     } catch (error) {
       console.error('Error loading assets:', error);
@@ -45,7 +33,7 @@ export class AssetsLoader {
     return new Sprite(texture);
   }
 
-  public getAnimationSpritesheet<T extends Spriteset>(type: T): Spritesheet {
+  public getSpritesheet<T extends Spriteset>(type: T): Spritesheet {
     if (!this.isLoaded) {
       throw new Error('Assets not loaded yet. Call loadAssets() first.');
     }
@@ -56,6 +44,26 @@ export class AssetsLoader {
     }
 
     return spritesheet;
+  }
+
+  public getCreatureTexture(creatureName: string): any {
+    if (!this.isLoaded) {
+      throw new Error('Assets not loaded yet. Call loadAssets() first.');
+    }
+
+    const texture = this.creatureTextures[creatureName];
+    if (!texture) {
+      throw new Error(`Creature texture not found: ${creatureName}`);
+    }
+
+    return texture;
+  }
+  private async loadBackgroundTiles(): Promise<void> {
+    this.spritesheets['grass'] = await this.loadSpritesheet('grass',
+      '/tilesets/tiles/Grass.png', '/tilesets/tiles/Grass_Spritesheet.json');
+    this.spritesheets['path'] = await this.loadSpritesheet('path',
+      '/tilesets/tiles/Path.png', '/tilesets/tiles/Path_Spritesheet.json');
+    // Add more background tiles here as needed
   }
 
   private async loadSpritesheet(tileset: Tileset, texturePath: string, spritesheetPath: string): Promise<Spritesheet> {
@@ -74,6 +82,26 @@ export class AssetsLoader {
       console.error(`Error loading tileset spritesheet for ${tileset}:`, error);
       throw error;
     }
+  }
+
+  private async loadSpritesAndAnimations(): Promise<void> {
+    // Player animation
+    this.animationSpritesheets['player'] = await this.loadAnimationSpritesheet('player',
+      '/sprites/player/Player.png', '/sprites/player/Player.json');
+
+    // Animal creature animations
+    const animalAnimations = [
+      { name: 'sheep', texture: '/sprites/animals/Sheep.png', json: '/sprites/animals/Sheep.json' },
+      { name: 'pig', texture: '/sprites/animals/Pig.png', json: '/sprites/animals/Pig.json' },
+      { name: 'cow', texture: '/sprites/animals/Cow.png', json: '/sprites/animals/Cow.json' },
+      { name: 'chicken', texture: '/sprites/animals/Chicken.png', json: '/sprites/animals/Chicken.json' }
+    ];
+    for (const animal of animalAnimations) {
+      this.animationSpritesheets[animal.name] = await this.loadAnimationSpritesheet(animal.name as Spriteset, animal.texture, animal.json);
+    }
+
+    // Creature textures (static)
+    await this.loadCreatureSprites();
   }
 
   private async loadAnimationSpritesheet(spriteset: Spriteset, texturePath: string, spritesheetPath: string): Promise<Spritesheet> {
@@ -116,25 +144,9 @@ export class AssetsLoader {
     }
   }
 
-  public getCreatureTexture(creatureName: string): any {
-    if (!this.isLoaded) {
-      throw new Error('Assets not loaded yet. Call loadAssets() first.');
-    }
-
-    const texture = this.creatureTextures[creatureName];
-    if (!texture) {
-      throw new Error(`Creature texture not found: ${creatureName}`);
-    }
-
-    return texture;
-  }
-
   private async loadCreatureSprites(): Promise<void> {
     const creatureSprites = [
-      // Enemies
-      { name: 'slime_green', path: '/sprites/enemies/Slime_Green.png' },
-      { name: 'skeleton', path: '/sprites/enemies/Skeleton.png' },
-      // Animals
+      // Animals only
       { name: 'sheep', path: '/sprites/animals/Sheep.png' },
       { name: 'pig', path: '/sprites/animals/Pig.png' },
       { name: 'cow', path: '/sprites/animals/Cow.png' },

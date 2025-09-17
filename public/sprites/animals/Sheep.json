@@ -1,0 +1,52 @@
+{
+  "frames": {
+    "sheep_0": {
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "w": 32,
+        "h": 32
+      }
+    },
+    "sheep_1": {
+      "frame": {
+        "x": 32,
+        "y": 0,
+        "w": 32,
+        "h": 32
+      }
+    },
+    "sheep_2": {
+      "frame": {
+        "x": 0,
+        "y": 32,
+        "w": 32,
+        "h": 32
+      }
+    },
+    "sheep_3": {
+      "frame": {
+        "x": 32,
+        "y": 32,
+        "w": 32,
+        "h": 32
+      }
+    }
+  },
+  "meta": {
+    "image": "Sheep.png",
+    "size": {
+      "w": 64,
+      "h": 64
+    },
+    "scale": "1"
+  },
+  "animations": {
+    "sheep_walk": [
+      "sheep_0",
+      "sheep_1",
+      "sheep_2",
+      "sheep_3"
+    ]
+  }
+}
