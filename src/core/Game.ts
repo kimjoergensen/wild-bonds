@@ -1,12 +1,12 @@
 import { GAME_CONFIG } from '@wild-bonds/configs/Constants';
-import { SceneManager } from '@wild-bonds/core/SceneManager';
 import { PlayerEntity } from '@wild-bonds/entities/PlayerEntity';
 import { AssetsLoader } from '@wild-bonds/graphics/AssetsLoader';
 import { BattleScene } from '@wild-bonds/scenes/BattleScene';
 import { ExplorationScene } from '@wild-bonds/scenes/ExplorationScene';
 import { InputManager } from '@wild-bonds/systems/InputManager';
+import { SceneManager } from '@wild-bonds/systems/SceneManager';
 import { Vector2 } from '@wild-bonds/types/common/Vector2';
-import { Application } from 'pixi.js';
+import { Application, Container } from 'pixi.js';
 
 
 export class Game {
@@ -14,6 +14,7 @@ export class Game {
   private readonly assetsLoader: AssetsLoader;
   private readonly player: PlayerEntity;
   private explorationScene: ExplorationScene | null = null;
+  private explorationContainer: Container | null = null;
   private prevPlayerTile: { x: number; y: number; } | null = null;
   private readonly sceneManager: SceneManager;
   private readonly inputManager: InputManager;
@@ -55,11 +56,17 @@ export class Game {
     this.sceneManager.registerScene('exploration', explorationScene);
     const battleScene = new BattleScene(this.assetsLoader);
     this.sceneManager.registerScene('battle', battleScene);
-    // Set up callback to switch to battle scene
+
+    // Set up callbacks for scene transitions
     explorationScene.setEncounterCallback(() => {
-      this.sceneManager.switchToScene('battle');
+      this.switchToBattleScene();
     });
+    battleScene.setExitCallback(() => {
+      this.switchToExplorationScene();
+    });
+
     const sceneContainer = await this.sceneManager.switchToScene('exploration');
+    this.explorationContainer = sceneContainer;
 
     // Load player sprite and initialize graphics
     const playerSpritesheet = this.assetsLoader.getAnimationSpritesheet('player');
@@ -82,6 +89,21 @@ export class Game {
     this.isRunning = false;
   }
 
+  private async switchToBattleScene(): Promise<void> {
+    await this.sceneManager.switchToScene('battle');
+  }
+
+  private async switchToExplorationScene(): Promise<void> {
+    const sceneContainer = await this.sceneManager.switchToScene('exploration');
+    this.explorationContainer = sceneContainer;
+
+    // Re-add player sprite to exploration scene
+    const playerSprite = this.player.getSprite();
+    if (playerSprite) {
+      sceneContainer.addChild(playerSprite);
+    }
+  }
+
   private gameLoop = (currentTime: number): void => {
     if (!this.isRunning) {
       return;
@@ -90,25 +112,23 @@ export class Game {
     const deltaTime = Math.min((currentTime - this.lastTime) / 1000, 1 / 24); // Cap at 24fps minimum
     this.lastTime = currentTime;
 
-    // Update
-    // const updateContext: UpdateContext = {
-    //   deltaTime,
-    //   currentTime
-    // };
-
     this.inputManager.update();
 
-    // Player movement and update
-    this.player.update(deltaTime, this.inputManager.isMovementPressed());
-    // After player movement, check for random encounter only if player moved to a new tile
-    if (this.explorationScene) {
-      const pos = this.player.getPosition();
-      if (!this.prevPlayerTile || this.prevPlayerTile.x !== pos.x || this.prevPlayerTile.y !== pos.y) {
-        this.explorationScene.checkForRandomEncounter(pos.x, pos.y);
+    // Only update player and check encounters when in exploration scene
+    const currentSceneType = this.sceneManager.getCurrentSceneType();
+    if (currentSceneType === 'exploration') {
+      // Player movement and update
+      this.player.update(deltaTime, this.inputManager.isMovementPressed());
+
+      // After player movement, check for random encounter only if player moved to a new tile
+      if (this.explorationScene) {
+        const pos = this.player.getPosition();
+        if (!this.prevPlayerTile || this.prevPlayerTile.x !== pos.x || this.prevPlayerTile.y !== pos.y) {
+          this.explorationScene.checkForRandomEncounter(pos.x, pos.y);
+        }
+        this.prevPlayerTile = { x: pos.x, y: pos.y };
       }
-      this.prevPlayerTile = { x: pos.x, y: pos.y };
     }
-    // this.sceneManager.update(updateContext);
 
     // Update FPS counter
     this.updateFPS(deltaTime);

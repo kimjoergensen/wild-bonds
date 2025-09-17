@@ -1,88 +1,97 @@
+import { GAME_CONFIG } from '@wild-bonds/configs/Constants';
 import { Scene } from '@wild-bonds/core/Scene';
-import { Container, Graphics, Text } from 'pixi.js';
+import { Container, Graphics } from 'pixi.js';
+
+type ExitCallback = () => void;
 
 export class BattleScene extends Scene {
-  public async init(container: Container): Promise<void> {
-    // Main battle box
-    const mainBox = new Graphics();
-    mainBox.lineStyle(2, 0xffffff, 1);
-    mainBox.beginFill(0x22223a, 0.98);
-    mainBox.drawRoundedRect(20, 20, 600, 340, 12);
-    mainBox.endFill();
-    container.addChild(mainBox);
+  private onExit: ExitCallback | null = null;
 
-    // Enemy HP bar background
-    const enemyHpBg = new Graphics();
-    enemyHpBg.beginFill(0x444444);
-    enemyHpBg.drawRect(40, 40, 220, 18);
-    enemyHpBg.endFill();
-    container.addChild(enemyHpBg);
-    // Enemy HP bar (80/100)
-    const enemyHp = new Graphics();
-    enemyHp.beginFill(0x6ee06e);
-    enemyHp.drawRect(40, 40, 176, 18); // 80/100 = 176px
-    enemyHp.endFill();
-    container.addChild(enemyHp);
-    // Enemy HP text
-    const enemyHpText = new Text('Enemy Creature HP: ████████░░ 80/100', { fontSize: 16, fill: 0xffffff });
-    enemyHpText.x = 40;
-    enemyHpText.y = 18;
-    container.addChild(enemyHpText);
-
-    // Enemy sprite placeholder
-    const enemySprite = new Graphics();
-    enemySprite.beginFill(0xaaaaee);
-    enemySprite.drawEllipse(120, 90, 48, 32);
-    enemySprite.endFill();
-    container.addChild(enemySprite);
-
-    // Player sprite placeholder
-    const playerSprite = new Graphics();
-    playerSprite.beginFill(0xeec16e);
-    playerSprite.drawEllipse(480, 220, 48, 32);
-    playerSprite.endFill();
-    container.addChild(playerSprite);
-
-    // Player HP bar background
-    const playerHpBg = new Graphics();
-    playerHpBg.beginFill(0x444444);
-    playerHpBg.drawRect(340, 260, 220, 18);
-    playerHpBg.endFill();
-    container.addChild(playerHpBg);
-    // Player HP bar (60/100)
-    const playerHp = new Graphics();
-    playerHp.beginFill(0x6ee06e);
-    playerHp.drawRect(340, 260, 132, 18); // 60/100 = 132px
-    playerHp.endFill();
-    container.addChild(playerHp);
-    // Player HP text
-    const playerHpText = new Text('Player Creature HP: ██████░░░░ 60/100', { fontSize: 16, fill: 0xffffff });
-    playerHpText.x = 340;
-    playerHpText.y = 238;
-    container.addChild(playerHpText);
-
-    // Command box
-    const cmdBox = new Graphics();
-    cmdBox.lineStyle(2, 0xffffff, 1);
-    cmdBox.beginFill(0x181820, 0.98);
-    cmdBox.drawRoundedRect(40, 300, 540, 50, 8);
-    cmdBox.endFill();
-    container.addChild(cmdBox);
-
-    // Command text
-    const cmdText = new Text('What will Sparky do?', { fontSize: 16, fill: 0xffffff });
-    cmdText.x = 56;
-    cmdText.y = 308;
-    container.addChild(cmdText);
-
-    // Command options
-    const optionsText = new Text('> Fight    Bag\n  Creature Run', { fontSize: 16, fill: 0xffffff });
-    optionsText.x = 56;
-    optionsText.y = 330;
-    container.addChild(optionsText);
+  /**
+   * Set a callback to be called when the player wants to exit the battle.
+   * @param cb Callback function
+   */
+  public setExitCallback(cb: ExitCallback) {
+    this.onExit = cb;
   }
 
-  cleanup(): void {
+  public async init(container: Container): Promise<void> {
+    // Get effective dimensions accounting for stage scale
+    const width = GAME_CONFIG.width / GAME_CONFIG.scale;
+    const height = GAME_CONFIG.height / GAME_CONFIG.scale;
+
+    // Simple water-themed gradient background
+    const background = new Graphics();
+    // background.fill(0x4A90E2); // Light blue top
+    background.rect(0, 0, width, height * 0.5).fill(0x4A90E2);
+    // background.endFill();
+    // background.fill(0x2E5984); // Darker blue bottom
+    background.rect(0, height * 0.5, width, height * 0.5).fill(0x2E5984);
+    container.addChild(background);
+
+    // Battle platforms
+    const enemyPlatform = new Graphics();
+    // enemyPlatform.beginFill(0x2E5984, 0.7);
+    enemyPlatform.ellipse(width * 0.75, height * 0.56, width * 0.1, height * 0.06).fill(0x2E5984);
+    // enemyPlatform.endFill();
+    container.addChild(enemyPlatform);
+
+    const playerPlatform = new Graphics();
+    // playerPlatform.beginFill(0x1E3A5F, 0.7);
+    playerPlatform.ellipse(width * 0.25, height * 0.81, width * 0.12, height * 0.07).fill(0x1E3A5F);
+    // playerPlatform.endFill();
+    container.addChild(playerPlatform);
+
+    // Enemy placeholder (simple rectangle)
+    const enemyPlaceholder = new Graphics();
+    // enemyPlaceholder.beginFill(0xFF6B35); // Orange
+    enemyPlaceholder.rect(width * 0.7, height * 0.45, width * 0.1, height * 0.15).fill(0xFF6B35);
+    // enemyPlaceholder.endFill();
+    container.addChild(enemyPlaceholder);
+
+    // Player placeholder (simple rectangle)
+    const playerPlaceholder = new Graphics();
+    // playerPlaceholder.beginFill(0x87CEEB); // Light blue
+    playerPlaceholder.rect(width * 0.2, height * 0.7, width * 0.1, height * 0.15).fill(0x87CEEB);
+    // playerPlaceholder.endFill();
+    container.addChild(playerPlaceholder);
+
+    // Command interface box
+    const commandBox = new Graphics();
+    // commandBox.beginFill(0x2C2C54);
+    commandBox.setStrokeStyle({ width: 2, color: 0x000000 }).rect(0, height * 0.85, width, height * 0.15).fill(0x2C2C54);
+    // commandBox.drawRect(0, height * 0.85, width, height * 0.15);
+    // commandBox.endFill();
+    container.addChild(commandBox);
+
+    // Text indicator using graphics (no Text constructor needed)
+    const textIndicator = new Graphics();
+    // textIndicator.beginFill(0xFFFF00); // Yellow indicator
+    textIndicator.rect(width * 0.05, height * 0.88, width * 0.3, height * 0.03).fill(0xFFFF00);
+    // textIndicator.endFill();
+    container.addChild(textIndicator);
+
+    console.log('Battle scene initialized successfully');
+  }
+
+  public activate(): void {
+    // Add keydown listener for escape
+    document.addEventListener('keydown', this.handleKeyDown);
+  }
+
+  public deactivate(): void {
+    // Remove keydown listener
+    document.removeEventListener('keydown', this.handleKeyDown);
+  }
+
+  private handleKeyDown = (event: KeyboardEvent): void => {
+    if (event.key === 'Escape' && this.onExit) {
+      console.log('Escaping from battle...');
+      this.onExit();
+    }
+  };
+
+  public cleanup(): void {
     // Cleanup logic for battle scene
   }
 }

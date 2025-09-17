@@ -6,6 +6,7 @@ import { Assets, Sprite, Spritesheet } from 'pixi.js';
 export class AssetsLoader {
   private readonly spritesheets = {} as Record<Tileset, Spritesheet>;
   private readonly animationSpritesheets = {} as Record<Spriteset, Spritesheet>;
+  private readonly creatureTextures = {} as Record<string, any>;
   private isLoaded = false;
 
   async loadAssets(): Promise<void> {
@@ -20,6 +21,9 @@ export class AssetsLoader {
       // Load player animations
       this.animationSpritesheets['player'] = await this.loadAnimationSpritesheet('player',
         '/sprites/player/Player.png', '/sprites/player/Player.json');
+
+      // Load creature sprites
+      await this.loadCreatureSprites();
 
       this.isLoaded = true;
     } catch (error) {
@@ -109,6 +113,41 @@ export class AssetsLoader {
       console.error('Error message:', error instanceof Error ? error.message : String(error));
       console.error('Error stack:', error instanceof Error ? error.stack : 'No stack trace');
       throw error;
+    }
+  }
+
+  public getCreatureTexture(creatureName: string): any {
+    if (!this.isLoaded) {
+      throw new Error('Assets not loaded yet. Call loadAssets() first.');
+    }
+
+    const texture = this.creatureTextures[creatureName];
+    if (!texture) {
+      throw new Error(`Creature texture not found: ${creatureName}`);
+    }
+
+    return texture;
+  }
+
+  private async loadCreatureSprites(): Promise<void> {
+    const creatureSprites = [
+      // Enemies
+      { name: 'slime_green', path: '/sprites/enemies/Slime_Green.png' },
+      { name: 'skeleton', path: '/sprites/enemies/Skeleton.png' },
+      // Animals
+      { name: 'sheep', path: '/sprites/animals/Sheep.png' },
+      { name: 'pig', path: '/sprites/animals/Pig.png' },
+      { name: 'cow', path: '/sprites/animals/Cow.png' },
+      { name: 'chicken', path: '/sprites/animals/Chicken.png' }
+    ];
+
+    for (const sprite of creatureSprites) {
+      try {
+        this.creatureTextures[sprite.name] = await Assets.load(sprite.path);
+        console.log(`Loaded creature sprite: ${sprite.name}`);
+      } catch (error) {
+        console.error(`Failed to load creature sprite ${sprite.name}:`, error);
+      }
     }
   }
 }

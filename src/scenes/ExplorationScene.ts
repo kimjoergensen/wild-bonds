@@ -64,6 +64,6 @@ export class ExplorationScene extends Scene {
   }
 
   cleanup(): void {
-    console.log('Cleaning up exploration scene...');
+    // Cleanup logic for exploration scene
   }
 }
